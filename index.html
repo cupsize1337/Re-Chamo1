@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Чёрный сайт — услуги</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000000;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .center-piece {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .top-title {
+            font-size: clamp(1.8rem, 6vw, 3.5rem);
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            color: white;
+            word-break: break-word;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo-container {
+            width: 200px;
+            height: 200px;
+            margin: 0.5rem 0 1rem 0;
+            border-radius: 50%;
+            border: 2px solid #333;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .bottom-title {
+            font-size: clamp(1.6rem, 5vw, 2.8rem);
+            font-weight: 600;
+            margin: 0.5rem 0 0.25rem 0;
+            color: white;
+            transition: opacity 0.3s ease;
+        }
+
+        .quote {
+            font-size: 1.2rem;
+            margin: 0.5rem 0 1.8rem 0;
+            color: #cccccc;
+            font-style: italic;
+            max-width: 600px;
+            border-top: 1px solid #222;
+            border-bottom: 1px solid #222;
+            padding: 0.8rem 1rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .toggle-button {
+            background: transparent;
+            border: 2px solid #ffffff;
+            color: white;
+            font-size: 1.4rem;
+            font-weight: 600;
+            padding: 0.9rem 3rem;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-top: 1rem;
+        }
+
+        .toggle-button:hover {
+            background: #ffffff;
+            color: black;
+            border-color: white;
+            transform: scale(1.02);
+        }
+
+        .tabs-panel {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.2rem;
+            margin-top: 2.5rem;
+            width: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-15px);
+            transition: opacity 0.5s ease, transform 0.5s ease, visibility 0.5s;
+            pointer-events: none;
+        }
+
+        .tabs-panel.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .tab-item {
+            background: #0f0f0f;
+            border: 1px solid #2a2a2a;
+            border-radius: 36px;
+            padding: 0.9rem 1.8rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.7rem;
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            min-width: 160px;
+            border: 1px solid #333;
+            cursor: pointer;
+        }
+
+        .tab-item:hover {
+            background: #1f1f1f;
+            border-color: #ffffff80;
+            transform: translateY(-3px);
+        }
+
+        .tab-icon {
+            width: 22px;
+            height: 22px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            filter: brightness(0) invert(1);
+        }
+
+        .tab-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: white;
+        }
+
+        .tab-label {
+            white-space: nowrap;
+        }
+
+        /* --- КРАСИВЫЙ БЛОК УСЛУГ (текст не исковеркан) --- */
+        .services-block {
+            width: 100%;
+            max-width: 750px;
+            background: #0c0c0c;
+            border: 1px solid #2a2a2a;
+            border-radius: 48px;
+            padding: 2.5rem 2rem;
+            display: none;
+            animation: fadeIn 0.4s ease;
+            margin: 1rem auto;
+            text-align: left;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+        }
+
+        .services-block.visible {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .services-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-align: center;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            color: #fff;
+            border-bottom: 2px solid #333;
+            padding-bottom: 1rem;
+        }
+
+        /* аккуратные карточки услуг */
+        .service-category {
+            margin: 2rem 0 1.5rem 0;
+        }
+
+        .category-head {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            padding-left: 0.5rem;
+            border-left: 6px solid #888;
+        }
+
+        .service-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .service-item {
+            background: #1a1a1a;
+            border-radius: 30px;
+            padding: 1.2rem 1.8rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            justify-content: space-between;
+            border: 1px solid #333;
+            transition: 0.2s;
+        }
+
+        .service-item:hover {
+            border-color: #777;
+            background: #1f1f1f;
+        }
+
+        .service-name {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: #ddd;
+        }
+
+        .service-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            background: #2a2a2a;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            letter-spacing: 0.5px;
+        }
+
+        .service-desc {
+            width: 100%;
+            font-size: 1rem;
+            color: #aaa;
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px dashed #333;
+        }
+
+        .info-block {
+            background: #111;
+            border-radius: 36px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border: 1px solid #2c2c2c;
+        }
+
+        .info-block p {
+            margin: 0.7rem 0;
+            line-height: 1.6;
+            color: #ccc;
+            font-size: 1.05rem;
+        }
+
+        .info-block a {
+            color: #bbbbff;
+            text-decoration: none;
+            border-bottom: 1px dotted #777;
+        }
+
+        .info-block a:hover {
+            color: white;
+        }
+
+        .contact-line {
+            background: #000;
+            border-radius: 60px;
+            padding: 1rem 1.8rem;
+            display: inline-block;
+            border: 1px solid #3a3a3a;
+            font-size: 1.2rem;
+            margin: 1rem 0 0 0;
+            word-break: break-word;
+        }
+
+        .back-button {
+            background: transparent;
+            border: 2px solid #ffffff;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 600;
+            padding: 0.9rem 3rem;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 2.5rem;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .back-button:hover {
+            background: #ffffff;
+            color: black;
+            transform: scale(1.02);
+        }
+
+        /* служебный класс скрытия */
+        .hide-all > *:not(.services-block) {
+            display: none;
+        }
+
+        @media (max-width: 650px) {
+            .tab-item {
+                width: 100%;
+            }
+            .tabs-panel {
+                flex-direction: column;
+                align-items: center;
+            }
+            .logo-container {
+                width: 160px;
+                height: 160px;
+            }
+            .service-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            .service-price {
+                align-self: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="center-piece" id="mainContent">
+        <div class="top-title"></div>
+
+        <div class="logo-container">
+            <!-- Если нет реального logo.png, можно оставить чёрный квадрат или заменить на цветной плейсхолдер -->
+            <img src="logo.png" alt="логотип" class="logo-image" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiMyMjIiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC1zaXplPSIyMCI+TE9HTzwvdGV4dD48L3N2Zz4='">
+        </div>
+
+        <div class="bottom-title">Re-Chamo</div>
+
+        <div class="quote">
+            Учусь, учу и делюсь мыслями
+        </div>
+
+        <button class="toggle-button" id="toggleTabsBtn">ВАЖНО</button>
+
+        <!-- Основные вкладки -->
+        <div class="tabs-panel" id="tabsPanel">
+            <a href="https://t.me/+oSgcXPA00i82MTIy" class="tab-item" target="_blank" rel="noopener">
+                <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.09.13.21.14.31-.01.09-.02.28-.03.44z"/></svg></span>
+                <span class="tab-label">Телеграм канал</span>
+            </a>
+
+            <a href="https://t.me/+Pg2fYsk1A1tmODJi" class="tab-item" target="_blank" rel="noopener">
+                <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></span>
+                <span class="tab-label">Чат</span>
+            </a>
+
+            <!-- Вкладка Услуги (открывает красивый блок) -->
+            <div class="tab-item" id="servicesTab">
+                <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z"/></svg></span>
+                <span class="tab-label">Услуги</span>
+            </div>
+
+            <a href="https://t.me/private_channel" class="tab-item" target="_blank" rel="noopener">
+                <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></span>
+                <span class="tab-label">Приватный канал</span>
+            </a>
+
+            <a href="https://t.me/+Q23rjWapSZlkYWI6" class="tab-item" target="_blank" rel="noopener">
+                <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+                <span class="tab-label">Отзывы</span>
+            </a>
+        </div>
+
+        <!-- БЛОК УСЛУГ — теперь красиво оформлен, текст сохранён полностью -->
+        <div class="services-block" id="servicesBlock">
+            <div class="services-title">🛡️ УСЛУГИ</div>
+            
+            <!-- Расследования -->
+            <div class="service-category">
+                <div class="category-head">Расследования</div>
+                <div class="service-grid">
+                    <div class="service-item">
+                        <span class="service-name">Информационное досье</span>
+                        <span class="service-price">8.99 USDT</span>
+                        <div class="service-desc">сбор данных</div>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-name">Оперативное досье</span>
+                        <span class="service-price">20.99 USDT+</span>
+                        <div class="service-desc">сбор + анализ данных</div>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-name">Разведывательное досье</span>
+                        <span class="service-price">20.99 USDT+</span>
+                        <div class="service-desc">сбор + анализ + разведка</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Обучение -->
+            <div class="service-category">
+                <div class="category-head">Обучение</div>
+                <div class="service-grid">
+                    <div class="service-item">
+                        <span class="service-name">Наставничество (менторство)</span>
+                        <span class="service-price">79.99 USDT/мес.</span>
+                        <div class="service-desc">личное ведение по OSINT, анализу, инструментам, социальной инженерии и др.</div>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-name">Личный Архив</span>
+                        <span class="service-price">5.99 USDT/мес.</span>
+                        <div class="service-desc">доступ к закрытому форуму, софт, методички, базы, словари</div>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-name">Личный Архив (навсегда)</span>
+                        <span class="service-price">14.99 USDT</span>
+                        <div class="service-desc">бессрочный доступ ко всем материалам архива</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Развёрнутое описание (как в исходном тексте) -->
+            <div class="info-block">
+                <p><strong style="color:#fff;">🔍 Расследования подробнее:</strong><br>
+                Информационное досье — сбор данных.<br>
+                Оперативное досье — сбор + анализ данных.<br>
+                Разведывательное досье — сбор + анализ + разведка.</p>
+
+                <p><strong style="color:#fff;">📘 Обучение подробнее:</strong><br>
+                Наставничество — менторство. Я за ручку пройду с вами по основным точкам интереса в разведке: OSINT, сбор данных, анализ и проверка объективности данных, систематизация, инструменты, методички, сборка дистрибутива под разведку и азы терминала, GEOINT, HUMINT, социальная инженерия и другие интересующие вас темы.<br>
+                Личный Архив — приватный форум проекта. Обучение в закрытом комьюнити + практика. В категориях архива вы найдете: софт, веб-инструменты, методички, отчёты, досье, инструкции, литературу, базы данных и словари, категорию для проведения расследований, а также деловые предложения от участников группы.</p>
+            </div>
+
+            <!-- Контакты и ссылки (в точности как в запросе) -->
+            <div style="text-align: center;">
+                <div class="contact-line">
+                    📬 <strong>Телеграм-канал:</strong> https://t.me/+oSgcXPA00i82MTIy
+                </div>
+                <div class="contact-line" style="margin-top: 0.8rem;">
+                    🛠️ <strong>Услуги:</strong> https://t.me/+-l7sji1YhwpiY2M6
+                </div>
+                <div class="contact-line" style="margin-top: 0.8rem;">
+                    💬 <strong>Чат:</strong> https://t.me/+Pg2fYsk1A1tmODJi
+                </div>
+                <div class="contact-line" style="margin-top: 0.8rem; background: #1a1a1a;">
+                    📱 <strong>Контакт:</strong> @presdentiall
+                </div>
+            </div>
+
+            <button class="back-button" id="backBtn">← НАЗАД</button>
+        </div>
+    </div>
+
+    <script>
+        const toggleBtn = document.getElementById('toggleTabsBtn');
+        const tabsPanel = document.getElementById('tabsPanel');
+        const servicesTab = document.getElementById('servicesTab');
+        const servicesBlock = document.getElementById('servicesBlock');
+        const backBtn = document.getElementById('backBtn');
+        const mainContent = document.getElementById('mainContent');
+        
+        // Показать/скрыть панель вкладок (основная кнопка)
+        toggleBtn.addEventListener('click', function() {
+            // Если сейчас не виден блок услуг, переключаем табы
+            if (!servicesBlock.classList.contains('visible') && servicesBlock.style.display !== 'block') {
+                tabsPanel.classList.toggle('visible');
+                this.innerHTML = tabsPanel.classList.contains('visible') ? '▲ СВЕРНУТЬ ▲' : 'ВАЖНО';
+            }
+        });
+
+        // Открыть услуги — скрываем все элементы mainContent, показываем только servicesBlock
+        servicesTab.addEventListener('click', function() {
+            // Перебираем все дочерние элементы mainContent
+            for (let child of mainContent.children) {
+                if (child !== servicesBlock) {
+                    child.style.display = 'none';
+                }
+            }
+            // Показываем блок услуг и делаем его visible (для CSS анимации)
+            servicesBlock.style.display = 'block';
+            servicesBlock.classList.add('visible');
+        });
+
+        // Вернуться назад — показать всё обратно
+        backBtn.addEventListener('click', function() {
+            for (let child of mainContent.children) {
+                child.style.display = ''; // возвращаем стандартное отображение
+            }
+            // Скрываем блок услуг
+            servicesBlock.style.display = 'none';
+            servicesBlock.classList.remove('visible');
+            // Возвращаем кнопку и закрываем панель табов (для порядка)
+            toggleBtn.innerHTML = '⚡ ПЯТЬ ВКЛАДОК ⚡';
+            tabsPanel.classList.remove('visible');
+        });
+
+        // Если пользователь кликнет на "услуги" когда блок уже открыт (защита от двойного скрытия)
+        // но по логике он скрыт, поэтому ок.
+    </script>
+</body>
+</html>
